@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080f19">
+  <meta name="description" content="Three.js 기반 3D 시네마틱 발사·폭발 비주얼 샌드박스. 실제 무기 성능을 재현하지 않는 비군사적 가상 그래픽 실험실.">
+  <title>KINETIC LAB — 3D Motion & VFX</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <script type="importmap">
+    {"imports":{
+      "three":"https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js",
+      "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"
+    }}
+  </script>
+  <script type="module" src="./src/main.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 42 42" fill="none"><path d="M9 31 21 9l12 22M14 24h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="9" r="2" fill="#88e8e6"/></svg></div>
+      <div class="brand-copy"><strong>KINETIC <span>LAB</span></strong><small>3D MOTION / VFX EXPERIMENT</small></div>
+    </div>
+    <div class="header-center"><span class="status-led"></span> OFFLINE-LOGIC <span class="header-sep">/</span> BROWSER SIMULATION <span class="version">V 1.0</span></div>
+    <div class="header-actions"><span id="fpsBadge" class="fps-badge">-- FPS</span><button id="resetViewBtn" class="icon-button" title="카메라 초기화" aria-label="카메라 초기화"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6M3.5 4.5v5h5"/></svg></button></div>
+  </header>
+
+  <aside class="sidebar controls-panel">
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 01 / LIBRARY</span><h2>모델 선택</h2></div><span class="counter">06 / 06</span></div>
+    <p class="muted panel-lead">각 이름은 외형 스타일을 구분하기 위한 레이블입니다. 실제 제원과 무관합니다.</p>
+    <div id="modelGrid" class="model-grid" role="group" aria-label="가상 모델 선택">
+      <button class="model-card active" data-model="0" aria-pressed="true"><span class="model-index">01</span><span class="model-symbol">H</span><strong>현무</strong><small>HYUNMOO</small></button>
+      <button class="model-card" data-model="1" aria-pressed="false"><span class="model-index">02</span><span class="model-symbol">S</span><strong>스커드</strong><small>SCUD</small></button>
+      <button class="model-card" data-model="2" aria-pressed="false"><span class="model-index">03</span><span class="model-symbol">I</span><strong>이스칸데르</strong><small>ISKANDER</small></button>
+      <button class="model-card" data-model="3" aria-pressed="false"><span class="model-index">04</span><span class="model-symbol">P</span><strong>화성포</strong><small>HWASONG</small></button>
+      <button class="model-card" data-model="4" aria-pressed="false"><span class="model-index">05</span><span class="model-symbol">F</span><strong>불화살</strong><small>BULHWASAL</small></button>
+      <button class="model-card" data-model="5" aria-pressed="false"><span class="model-index">06</span><span class="model-symbol">B</span><strong>바다수리</strong><small>BADASURI</small></button>
+    </div>
+    <div class="section-divider"></div>
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 02 / PLAYBACK</span><h2>시퀀스</h2></div><span id="sequenceState" class="tiny-pill">READY</span></div>
+    <div class="sequence-preview"><div class="sequence-icon"><span></span><span></span><span></span></div><div><small>CURRENT SELECTION</small><strong id="selectedName">현무 <span>/ HYUNMOO</span></strong></div></div>
+    <div class="action-grid">
+      <button class="primary-button" id="launchBtn"><span class="button-glyph">↗</span> 단일 발사 연출</button>
+      <button class="secondary-button" id="sequenceBtn"><span class="button-dot"></span><span id="sequenceBtnLabel">연속 재생 시작</span></button>
+    </div>
+    <label class="switch-line" for="cycleSwitch"><span><strong>모델 순환</strong><small>6개 스타일 순서대로 재생</small></span><span class="toggle"><input id="cycleSwitch" type="checkbox" checked><span class="track"></span></span></label>
+    <div class="range-block"><div class="range-label"><label for="intervalRange">재생 간격</label><output id="intervalValue">1.6s</output></div><input type="range" id="intervalRange" min="800" max="4000" step="100" value="1600"><div class="range-ends"><span>빠르게</span><span>느리게</span></div></div>
+    <div class="range-block"><div class="range-label"><label for="speedRange">시뮬레이션 속도</label><output id="speedValue">1.0×</output></div><input type="range" id="speedRange" min="0.5" max="2" step="0.25" value="1"></div>
+    <div class="section-divider"></div>
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 03 / RENDERING</span><h2>그래픽 설정</h2></div></div>
+    <label class="field-label" for="qualitySelect">렌더링 품질</label>
+    <select id="qualitySelect"><option value="low">절전 / LOW</option><option value="medium" selected>균형 / BALANCED</option><option value="high">고화질 / HIGH</option></select>
+    <div class="range-block"><div class="range-label"><label for="densityRange">파티클 밀도</label><output id="densityValue">70%</output></div><input type="range" id="densityRange" min="20" max="100" step="10" value="70"></div>
+    <div class="panel-bottom"><button class="text-button" id="pauseBtn">일시정지</button><button class="text-button danger" id="clearBtn">장면 초기화</button></div>
+  </aside>
+
+  <main class="stage" id="stage">
+    <canvas id="sceneCanvas" aria-label="3차원 그래픽 시뮬레이션 뷰포트">WebGL을 지원하는 브라우저가 필요합니다.</canvas>
+    <div id="webglError" class="webgl-error" hidden>WebGL 초기화에 실패했습니다. 그래픽 가속을 켜거나 최신 브라우저를 이용해 주세요.</div>
+    <div class="stage-top">
+      <div class="stage-caption"><span class="eyebrow">VISUAL SANDBOX</span><h1>Motion in <em>three dimensions.</em></h1><p>고성능 3D 시각 효과를 위한 인터랙티브 실험 공간</p></div>
+      <div class="scene-tag"><span class="pulse-indicator"></span><span id="renderStatus">RENDER ACTIVE</span></div>
+    </div>
+    <div class="stage-crosshair" aria-hidden="true"><i></i><i></i></div>
+    <div class="stage-bottom">
+      <div class="view-toggle" role="group" aria-label="카메라 프리셋"><button class="view-button active" data-view="orbit" aria-pressed="true">ISOMETRIC</button><button class="view-button" data-view="wide" aria-pressed="false">WIDE</button><button class="view-button" data-view="low" aria-pressed="false">GROUND</button></div>
+      <div class="stage-hint">드래그 회전 <span>·</span> 휠 확대/축소 <span>·</span> 우클릭 이동</div>
+    </div>
+    <div class="stage-watermark" aria-hidden="true">K / LAB <span>001</span></div>
+  </main>
+
+  <aside class="sidebar telemetry-panel">
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 04 / MONITOR</span><h2>시뮬레이션 정보</h2></div><span class="live-indicator"><i></i> LOCAL</span></div>
+    <div class="telemetry-hero"><span class="eyebrow">TOTAL ANIMATIONS</span><strong id="launchCount">000</strong><span class="muted">재생된 발사 애니메이션</span></div>
+    <div class="metric-grid">
+      <div class="metric"><small>FLYING OBJECTS</small><strong id="activeCount">00</strong><span>활성 오브젝트</span></div>
+      <div class="metric"><small>PARTICLE FX</small><strong id="particleCount">0000</strong><span>활성 파티클</span></div>
+      <div class="metric"><small>FRAME RATE</small><strong id="fpsCount">--</strong><span>FPS</span></div>
+      <div class="metric"><small>RENDER SCALE</small><strong id="renderScale">1.5×</strong><span>픽셀 비율</span></div>
+    </div>
+    <div class="section-divider"></div>
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 05 / ACTIVITY</span><h2>이벤트 기록</h2></div><button id="clearLogBtn" class="subtle-button" aria-label="이벤트 기록 지우기">CLEAR</button></div>
+    <ol id="eventLog" class="event-log" aria-live="polite"><li><time>00:00:00</time><span>시각화 시스템 준비 중</span></li></ol>
+    <div class="info-note"><span class="info-icon">i</span><p>모든 비행 경로, 외형 및 효과는 예술적 연출입니다. 실제 무기의 사거리, 유도, 폭발 위력 또는 작동 방식은 재현하지 않습니다.</p></div>
+    <div class="sidebar-credit">BUILT WITH THREE.JS <span>·</span> RHEEHOSE</div>
+  </aside>
+</div>
+</body>
+</html>

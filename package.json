@@ -1,0 +1,13 @@
+{
+  "name": "kinetic-lab-visual-sandbox",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static Three.js motion and decorative VFX sandbox",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
