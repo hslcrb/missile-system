@@ -44,6 +44,18 @@ Python 3을 사용하는 경우:
 
     npm test
 
+## 배포 상태
+
+- 프로덕션 도메인: https://missile.rhee.life
+- 기본 Pages 도메인: https://missile-system.pages.dev
+- Cloudflare Pages 프로젝트: `missile-system`
+- 소스: `hslcrb/missile-system` / `main`
+- Git 자동 배포: 활성화 (`main` 푸시 시 자동 반영)
+- 빌드 명령: 없음 (정적 파일 그대로 서비스)
+- 출력 폴더: `.`
+- GitHub Actions, 백엔드, API 서버, 데이터베이스, Workers 런타임: 사용하지 않음
+- 사이트 취지: 다양한 발사체의 그래픽 표현과 현상을 관찰하며 미사일의 위험성을 인식하는 교육적 시각화 체험장. 다만 실제 물리학 검증, 군사 성능 재현 또는 안전 예측 도구는 아님.
+
 ## 무료 정적 배포
 
 **Cloudflare Pages**: GitHub 저장소 hslcrb/missile-system 을 연결하고, Production branch는 main, 프레임워크 프리셋은 None, 빌드 명령은 비움, 출력 디렉터리는 프로젝트 루트(.)로 설정합니다. GitHub Actions 없이 GitHub 커밋과 연동할 수 있습니다.
