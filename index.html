@@ -25,7 +25,7 @@
       <div class="brand-copy"><strong>KINETIC <span>LAB</span></strong><small>3D MOTION / VFX EXPERIMENT</small></div>
     </div>
     <div class="header-center"><span class="status-led"></span> OFFLINE-LOGIC <span class="header-sep">/</span> BROWSER SIMULATION <span class="version">V 1.0</span></div>
-    <div class="header-actions"><span id="fpsBadge" class="fps-badge">-- FPS</span><button id="resetViewBtn" class="icon-button" title="카메라 초기화" aria-label="카메라 초기화"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6M3.5 4.5v5h5"/></svg></button></div>
+    <div class="header-actions"><button id="themeBtn" class="theme-button" type="button" aria-label="라이트 모드로 전환" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><span id="themeLabel">LIGHT</span></button><span id="fpsBadge" class="fps-badge">-- FPS</span><button id="resetViewBtn" class="icon-button" title="카메라 초기화" aria-label="카메라 초기화"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6M3.5 4.5v5h5"/></svg></button></div>
   </header>
 
   <aside class="sidebar controls-panel">
@@ -40,17 +40,37 @@
       <button class="model-card" data-model="5" aria-pressed="false"><span class="model-index">06</span><span class="model-symbol">B</span><strong>바다수리</strong><small>BADASURI</small></button>
     </div>
     <div class="section-divider"></div>
-    <div class="panel-title-row"><div><span class="eyebrow">SECTION 02 / PLAYBACK</span><h2>시퀀스</h2></div><span id="sequenceState" class="tiny-pill">READY</span></div>
+    <section class="mode-section" aria-labelledby="modeHeading">
+      <div class="panel-title-row"><div><span class="eyebrow">SECTION 02 / EXPERIENCES</span><h2 id="modeHeading">체험 모드</h2></div><span class="counter">04 MODES</span></div>
+      <div class="mode-grid" role="group" aria-label="시각효과 모드">
+        <button type="button" class="mode-card active" data-mode="flight" aria-pressed="true"><strong>비행 모션</strong><small>FLIGHT FX</small></button>
+        <button type="button" class="mode-card" data-mode="long" aria-pressed="false"><strong>장사정포</strong><small>LONG-RANGE FX</small></button>
+        <button type="button" class="mode-card" data-mode="self" aria-pressed="false"><strong>자주포</strong><small>SELF-PROPELLED FX</small></button>
+        <button type="button" class="mode-card" data-mode="coast" aria-pressed="false"><strong>해안포</strong><small>COASTAL FX</small></button>
+      </div>
+      <div id="structureControls" class="structure-controls" hidden>
+        <div class="target-heading"><span>가상 구조물 선택</span><small>3D 화면에서 직접 클릭 가능</small></div>
+        <div class="target-grid" role="group" aria-label="가상 건물 선택">
+          <button type="button" data-structure="0" class="target-chip active" aria-pressed="true">건물 A</button>
+          <button type="button" data-structure="1" class="target-chip" aria-pressed="false">건물 B</button>
+          <button type="button" data-structure="2" class="target-chip" aria-pressed="false">건물 C</button>
+        </div>
+        <button type="button" id="restoreStructuresBtn" class="restore-button">모든 구조물 복원</button>
+      </div>
+      <p class="mode-disclaimer">모든 건물·지형·동작은 허구이며 실제 사격 전술·탄도·군사 성능과 무관합니다.</p>
+    </section>
+    <div class="section-divider"></div>
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 03 / PLAYBACK</span><h2>시퀀스</h2></div><span id="sequenceState" class="tiny-pill">READY</span></div>
     <div class="sequence-preview"><div class="sequence-icon"><span></span><span></span><span></span></div><div><small>CURRENT SELECTION</small><strong id="selectedName">현무 <span>/ HYUNMOO</span></strong></div></div>
     <div class="action-grid">
-      <button class="primary-button" id="launchBtn"><span class="button-glyph">↗</span> 단일 발사 연출</button>
+      <button class="primary-button" id="launchBtn"><span class="button-glyph">↗</span> <span id="launchLabel">단일 비행 연출</span></button>
       <button class="secondary-button" id="sequenceBtn"><span class="button-dot"></span><span id="sequenceBtnLabel">연속 재생 시작</span></button>
     </div>
-    <label class="switch-line" for="cycleSwitch"><span><strong>모델 순환</strong><small>6개 스타일 순서대로 재생</small></span><span class="toggle"><input id="cycleSwitch" type="checkbox" checked><span class="track"></span></span></label>
+    <label class="switch-line" for="cycleSwitch"><span><strong id="cycleLabel">모델 순환</strong><small id="cycleDescription">6개 스타일 순서대로 재생</small></span><span class="toggle"><input id="cycleSwitch" type="checkbox" checked><span class="track"></span></span></label>
     <div class="range-block"><div class="range-label"><label for="intervalRange">재생 간격</label><output id="intervalValue">1.6s</output></div><input type="range" id="intervalRange" min="800" max="4000" step="100" value="1600"><div class="range-ends"><span>빠르게</span><span>느리게</span></div></div>
     <div class="range-block"><div class="range-label"><label for="speedRange">시뮬레이션 속도</label><output id="speedValue">1.0×</output></div><input type="range" id="speedRange" min="0.5" max="2" step="0.25" value="1"></div>
     <div class="section-divider"></div>
-    <div class="panel-title-row"><div><span class="eyebrow">SECTION 03 / RENDERING</span><h2>그래픽 설정</h2></div></div>
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 04 / RENDERING</span><h2>그래픽 설정</h2></div></div>
     <label class="field-label" for="qualitySelect">렌더링 품질</label>
     <select id="qualitySelect"><option value="low">절전 / LOW</option><option value="medium" selected>균형 / BALANCED</option><option value="high">고화질 / HIGH</option></select>
     <div class="range-block"><div class="range-label"><label for="densityRange">파티클 밀도</label><output id="densityValue">70%</output></div><input type="range" id="densityRange" min="20" max="100" step="10" value="70"></div>
@@ -61,19 +81,19 @@
     <canvas id="sceneCanvas" aria-label="3차원 그래픽 시뮬레이션 뷰포트">WebGL을 지원하는 브라우저가 필요합니다.</canvas>
     <div id="webglError" class="webgl-error" hidden>WebGL 초기화에 실패했습니다. 그래픽 가속을 켜거나 최신 브라우저를 이용해 주세요.</div>
     <div class="stage-top">
-      <div class="stage-caption"><span class="eyebrow">VISUAL SANDBOX</span><h1>Motion in <em>three dimensions.</em></h1><p>고성능 3D 시각 효과를 위한 인터랙티브 실험 공간</p></div>
+      <div class="stage-caption"><span class="eyebrow">VISUAL SANDBOX</span><h1>Motion in <em>three dimensions.</em></h1><p>미사일의 위험성을 생각하는 가상 3D 물리·시각효과 체험장</p></div>
       <div class="scene-tag"><span class="pulse-indicator"></span><span id="renderStatus">RENDER ACTIVE</span></div>
     </div>
     <div class="stage-crosshair" aria-hidden="true"><i></i><i></i></div>
     <div class="stage-bottom">
-      <div class="view-toggle" role="group" aria-label="카메라 프리셋"><button class="view-button active" data-view="orbit" aria-pressed="true">ISOMETRIC</button><button class="view-button" data-view="wide" aria-pressed="false">WIDE</button><button class="view-button" data-view="low" aria-pressed="false">GROUND</button></div>
-      <div class="stage-hint">드래그 회전 <span>·</span> 휠 확대/축소 <span>·</span> 우클릭 이동</div>
+      <div class="view-toggle" role="group" aria-label="카메라 프리셋"><button class="view-button active" data-view="orbit" aria-pressed="true">ISOMETRIC</button><button class="view-button" data-view="wide" aria-pressed="false">WIDE</button><button class="view-button" data-view="low" aria-pressed="false">GROUND</button><button class="view-button" data-view="structures" aria-pressed="false">STRUCTURES</button></div>
+      <div class="stage-hint" id="stageHintText">드래그 회전 · 휠 확대/축소 · 우클릭 이동</div>
     </div>
     <div class="stage-watermark" aria-hidden="true">K / LAB <span>001</span></div>
   </main>
 
   <aside class="sidebar telemetry-panel">
-    <div class="panel-title-row"><div><span class="eyebrow">SECTION 04 / MONITOR</span><h2>시뮬레이션 정보</h2></div><span class="live-indicator"><i></i> LOCAL</span></div>
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 05 / MONITOR</span><h2>시뮬레이션 정보</h2></div><span class="live-indicator"><i></i> LOCAL</span></div>
     <div class="telemetry-hero"><span class="eyebrow">TOTAL ANIMATIONS</span><strong id="launchCount">000</strong><span class="muted">재생된 발사 애니메이션</span></div>
     <div class="metric-grid">
       <div class="metric"><small>FLYING OBJECTS</small><strong id="activeCount">00</strong><span>활성 오브젝트</span></div>
@@ -82,9 +102,9 @@
       <div class="metric"><small>RENDER SCALE</small><strong id="renderScale">1.5×</strong><span>픽셀 비율</span></div>
     </div>
     <div class="section-divider"></div>
-    <div class="panel-title-row"><div><span class="eyebrow">SECTION 05 / ACTIVITY</span><h2>이벤트 기록</h2></div><button id="clearLogBtn" class="subtle-button" aria-label="이벤트 기록 지우기">CLEAR</button></div>
+    <div class="panel-title-row"><div><span class="eyebrow">SECTION 06 / ACTIVITY</span><h2>이벤트 기록</h2></div><button id="clearLogBtn" class="subtle-button" aria-label="이벤트 기록 지우기">CLEAR</button></div>
     <ol id="eventLog" class="event-log" aria-live="polite"><li><time>00:00:00</time><span>시각화 시스템 준비 중</span></li></ol>
-    <div class="info-note"><span class="info-icon">i</span><p>모든 비행 경로, 외형 및 효과는 예술적 연출입니다. 실제 무기의 사거리, 유도, 폭발 위력 또는 작동 방식은 재현하지 않습니다.</p></div>
+    <div class="info-note"><span class="info-icon">i</span><p>모든 장비 외형·구조물·비행·붕괴는 허구의 시각 연출입니다. 실제 사격 지점·탄도·표적 계산·폭발 위력을 재현하지 않습니다.</p></div>
     <div class="sidebar-credit">BUILT WITH THREE.JS <span>·</span> RHEEHOSE</div>
   </aside>
 </div>

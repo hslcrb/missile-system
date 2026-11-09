@@ -172,6 +172,19 @@ export function buildWorld(scene) {
         pad.ringMat.color.setHex(i===index?0x9cf3e7:0x3c7a84);
         pad.ringMat.opacity=i===index?1:.63;
       });
+    },
+    setTheme(isLight){
+      scene.background.setHex(isLight?0xc3dfeb:0x091723);
+      if(scene.fog)scene.fog.color.setHex(isLight?0xc3dfeb:0x091723);
+      ground.material.color.setHex(isLight?0x93bcc9:0x0d1e2c);
+      blockMat.color.setHex(isLight?0x9ab8c5:0x172b3a);
+      plinthMat.color.setHex(isLight?0x537e8e:0x1c3543);
+      centerMat.color.setHex(isLight?0x477b8b:0x12303a);
+      perimeter.material.color.setHex(isLight?0x2e8799:0x2d7181);
+      lineMat.color.setHex(isLight?0x427b90:0x306172);
+      pads.forEach(pad=>{
+        pad.ringMat.opacity=isLight?.82:.78;
+      });
     }
   };
 }
